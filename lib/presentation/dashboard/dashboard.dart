@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../providers/LocaleProvider.dart';
+import '../utils/Responsive .dart';
 import '../utils/common_widgets.dart';
 
 class DashboardScreen extends StatelessWidget {
@@ -32,6 +33,7 @@ class DashboardScreen extends StatelessWidget {
         // leadingWidth: 35,
       ),
       drawer: Drawer(
+        width: Responsive.isMobile(context) ? null : 500,
         backgroundColor: colorWhite,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.end,

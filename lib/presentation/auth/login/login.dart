@@ -5,10 +5,8 @@ import 'package:alot/presentation/utils/Responsive%20.dart';
 import 'package:alot/presentation/utils/colors.dart';
 import 'package:alot/presentation/utils/dims.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import '../../dashboard/dashboard.dart';
 import '../../utils/common_widgets.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});

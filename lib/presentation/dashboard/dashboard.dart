@@ -1,5 +1,8 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, sort_child_properties_last
 
+import 'package:alot/presentation/dashboard/bottom_nav/account/account.dart';
+import 'package:alot/presentation/dashboard/bottom_nav/cart/cart.dart';
+import 'package:alot/presentation/notification/notification.dart';
 import 'package:alot/presentation/utils/colors.dart';
 import 'package:alot/presentation/utils/dims.dart';
 import 'package:flutter/material.dart';
@@ -8,211 +11,218 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../providers/LocaleProvider.dart';
 import '../utils/Responsive .dart';
 import '../utils/common_widgets.dart';
+import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
-class DashboardScreen extends StatelessWidget {
+import 'bottom_nav/home/homescreen.dart';
+import 'bottom_nav/likes/likes.dart';
+
+class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => CartNotifier(),
-      child: Scaffold(
-          appBar: AppBar(
-            backgroundColor: colorBlue,
-            leading: Builder(builder: (context) {
-              return InkWell(
-                onTap: () {
-                  Scaffold.of(context).openDrawer();
-                },
-                child: Padding(
-                  padding: const EdgeInsets.all(13),
-                  child: Image.asset(
-                    'assets/images/hamburger_icon.png',
-                  ),
-                ),
-              );
-            }),
-            // leadingWidth: 35,
-          ),
-          drawer: Drawer(
-            width: Responsive.isMobile(context) ? null : 500,
-            backgroundColor: colorWhite,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                LocaleSwitcherWidget(),
-                Padding(
-                  padding: const EdgeInsets.only(top: 50, right: 20),
-                  child: InkWell(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: Icon(
-                      Icons.close,
-                      size: 30,
-                    ),
-                  ),
-                ),
-                Center(
-                  child: Column(
-                    children: [
-                      Image.asset(
-                        "assets/images/footer_ogo.png",
-                        width: 120,
-                        height: 60,
-                      ),
-                      height15,
-                      TextWidget(
-                          title: AppLocalizations.of(context)!.hello.toString(),
-                          textStyle: TextStyle(fontWeight: FontWeight.bold)),
-                      height5,
-                      TextWidget(
-                          title: "Classifieds",
-                          textStyle: TextStyle(fontWeight: FontWeight.bold)),
-                      height5,
-                      TextWidget(
-                          title: "Care",
-                          textStyle: TextStyle(fontWeight: FontWeight.bold)),
-                      height5,
-                      TextWidget(
-                          title: "Market",
-                          textStyle: TextStyle(fontWeight: FontWeight.bold)),
-                    ],
-                  ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ElevatedButton(
-                          onPressed: () {},
-                          child: TextWidget(
-                              title: "Login",
-                              textStyle:
-                                  TextStyle(fontWeight: FontWeight.bold)),
-                          style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStatePropertyAll(colorBlue),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ElevatedButton(
-                          onPressed: () {},
-                          child: TextWidget(
-                              title: "Sign in",
-                              textStyle:
-                                  TextStyle(fontWeight: FontWeight.bold)),
-                          style: ButtonStyle(
-                            backgroundColor: MaterialStatePropertyAll(colorRed),
-                          ),
-                        ),
-                      ),
-                    )
-                  ],
-                )
-              ],
-            ),
-          ),
-          body: Column(
-            children: [
-              Expanded(
-                child: ProductList(),
-              ),
-              ShoppingCartSummary(),
-            ],
-          )),
-    );
-  }
+  State<DashboardScreen> createState() => _DashboardScreenState();
 }
 
-class ShoppingCartSummary extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final cartNotifier = context.watch<CartNotifier>();
-
-    return Container(
-      padding: EdgeInsets.all(16.0),
-      color: Colors.grey[200],
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Text(
-            'Shopping Cart Summary',
-            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-          ),
-          SizedBox(height: 10.0),
-          // Display items in the cart
-          for (final item in cartNotifier.cart.items)
-            ListTile(
-              title: Text(item.name),
-              subtitle: Text('\$${item.price.toStringAsFixed(2)}'),
-              trailing: ElevatedButton(
-                onPressed: () {
-                  context.read<CartNotifier>().removeItem(item);
-                },
-                child: Text('Remove from Cart'),
-              ),
-            ),
-          SizedBox(height: 10.0),
-          Text('Total Items: ${cartNotifier.cart.items.length}'),
-          Text(
-              'Total Price: \$${cartNotifier.cart.totalPrice.toStringAsFixed(2)}'),
-          SizedBox(height: 10.0),
-          ElevatedButton(
-            onPressed: () {
-              context.read<CartNotifier>().clearCart();
-            },
-            child: Text('Clear Cart'),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class ProductList extends StatelessWidget {
-  final List<Product> products = [
-    Product(id: '1', name: 'Item 1', price: 20.0),
-    Product(id: '2', name: 'Item 2', price: 30.0),
-    Product(id: '3', name: 'Item 3', price: 15.0),
+class _DashboardScreenState extends State<DashboardScreen> {
+  var _currentIndex = 0;
+  final _pages = [
+    HomeScreen(),
+    LikeScreen(),
+    CartScreen(
+      isHomeScreen: true,
+    ),
+    AccountScreen()
   ];
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: products.length,
-      itemBuilder: (context, index) {
-        final product = products[index];
-        return ListTile(
-          title: Text(product.name),
-          subtitle: Text('\$${product.price.toStringAsFixed(2)}'),
-          trailing: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ElevatedButton(
-                onPressed: () {
-                  context.read<CartNotifier>().addItem(product);
-                },
-                child: Text('Add to Cart'),
+    return Scaffold(
+        backgroundColor: colorWhite,
+        appBar: AppBar(
+          backgroundColor: colorWhite,
+          elevation: 0,
+          leading: Builder(builder: (context) {
+            return InkWell(
+              onTap: () {
+                Scaffold.of(context).openDrawer();
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(13),
+                child: Image.asset(
+                  'assets/images/menu.png',
+                ),
               ),
-              SizedBox(width: 8.0),
-              ElevatedButton(
-                onPressed: () {
-                  context.read<CartNotifier>().removeItem(product);
-                },
-                child: Text('Remove'),
+            );
+          }),
+
+          actions: [
+            InkWell(
+              onTap: () {
+                if (_currentIndex != 2) {
+                  setState(() => _currentIndex = 2);
+                }
+              },
+              child: Image.asset(
+                'assets/images/shopping_cart.png',
+                width: 25,
+                height: 25,
               ),
-            ],
+            ),
+            width15,
+            InkWell(
+              onTap: () {
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (context) {
+                  return NotificationScreen();
+                }));
+              },
+              child: Icon(
+                Icons.notifications_active,
+                color: colorRed,
+                size: 30,
+              ),
+            ),
+            width20
+          ],
+          // leadingWidth: 35,
+        ),
+        bottomNavigationBar: SalomonBottomBar(
+          currentIndex: _currentIndex,
+          onTap: (i) => setState(() => _currentIndex = i),
+          items: [
+            /// Home
+            SalomonBottomBarItem(
+              icon: Icon(Icons.home),
+              title: Text("Home"),
+              selectedColor: Colors.purple,
+            ),
+
+            /// Likes
+            SalomonBottomBarItem(
+              icon: Icon(Icons.favorite_border),
+              title: Text("Likes"),
+              selectedColor: Colors.pink,
+            ),
+
+            /// Search
+            SalomonBottomBarItem(
+              icon: Icon(Icons.shopping_bag),
+              title: Text("Cart"),
+              selectedColor: Colors.orange,
+            ),
+
+            /// Profile
+            SalomonBottomBarItem(
+              icon: Icon(Icons.person),
+              title: Text("Profile"),
+              selectedColor: Colors.teal,
+            ),
+          ],
+        ),
+        drawer: DrawerWidget(),
+        body: _pages[_currentIndex]);
+  }
+}
+
+class DrawerWidget extends StatelessWidget {
+  const DrawerWidget({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Drawer(
+      width: Responsive.isMobile(context) ? null : 500,
+      backgroundColor: colorWhite,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          LocaleSwitcherWidget(),
+          Padding(
+            padding: const EdgeInsets.only(top: 50, right: 20),
+            child: InkWell(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: Icon(
+                Icons.close,
+                size: 30,
+              ),
+            ),
           ),
-        );
-      },
+          Center(
+            child: Column(
+              children: [
+                Image.asset(
+                  "assets/images/footer_ogo.png",
+                  width: 120,
+                  height: 60,
+                ),
+                height15,
+                InkWell(
+                  onTap: () {
+                    Navigator.of(context)
+                        .push(MaterialPageRoute(builder: (context) {
+                      return CartScreen(
+                        isHomeScreen: true,
+                      );
+                    }));
+                  },
+                  child: TextWidget(
+                      title: 'Jobs',
+                      textStyle: TextStyle(fontWeight: FontWeight.bold)),
+                ),
+                height5,
+                TextWidget(
+                    title: "Classifieds",
+                    textStyle: TextStyle(fontWeight: FontWeight.bold)),
+                height5,
+                TextWidget(
+                    title: "Care",
+                    textStyle: TextStyle(fontWeight: FontWeight.bold)),
+                height5,
+                TextWidget(
+                    title: "Market",
+                    textStyle: TextStyle(fontWeight: FontWeight.bold)),
+              ],
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ElevatedButton(
+                    onPressed: () {},
+                    child: TextWidget(
+                        title: "Login",
+                        textStyle: TextStyle(fontWeight: FontWeight.bold)),
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStatePropertyAll(colorBlue),
+                    ),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ElevatedButton(
+                    onPressed: () {},
+                    child: TextWidget(
+                        title: "Sign in",
+                        textStyle: TextStyle(fontWeight: FontWeight.bold)),
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStatePropertyAll(colorRed),
+                    ),
+                  ),
+                ),
+              )
+            ],
+          )
+        ],
+      ),
     );
   }
 }
@@ -249,41 +259,4 @@ class LocaleSwitcherWidget extends StatelessWidget {
       ),
     );
   }
-}
-
-// ChangeNotifier class to notify listeners when the cart changes
-class CartNotifier extends ChangeNotifier {
-  Cart _cart = Cart();
-
-  Cart get cart => _cart;
-
-  void addItem(Product product) {
-    _cart.items.add(product);
-    notifyListeners();
-  }
-
-  void removeItem(Product product) {
-    _cart.items.remove(product);
-    notifyListeners();
-  }
-
-  void clearCart() {
-    _cart.items.clear();
-    notifyListeners();
-  }
-}
-
-// Model for a product
-class Product {
-  final String id;
-  final String name;
-  final double price;
-
-  Product({required this.id, required this.name, required this.price});
-}
-
-// Model for the shopping cart
-class Cart {
-  final List<Product> items = [];
-  double get totalPrice => items.fold(0, (sum, item) => sum + item.price);
 }

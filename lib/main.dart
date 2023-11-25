@@ -1,12 +1,21 @@
+import 'package:alot/presentation/dashboard/cartmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:provider/provider.dart';
+import 'core/product_details.dart';
 import 'presentation/auth/login/login.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'providers/LocaleProvider.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
+  if (!Hive.isAdapterRegistered(CartModelAdapter().typeId)) {
+    Hive.registerAdapter(CartModelAdapter());
+  }
+  Hive.registerAdapter(ProductDetailsAdapter());
   runApp(const MyApp());
 }
 

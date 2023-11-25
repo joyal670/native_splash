@@ -20,3 +20,5 @@ const colorPeach = Color(0xffFFE8B4);
 const colorRed = Colors.red;
 const colorRedAccent = Colors.redAccent;
 const colorBlueAccent = Colors.blueAccent;
+const colorpOrange = Color(0xffF87547);
+const colorpOBackground = Color(0xffF8F8F8);

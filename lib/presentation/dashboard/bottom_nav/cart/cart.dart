@@ -13,6 +13,7 @@ class CartScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    getAllProducts();
     return Scaffold(
         backgroundColor: colorWhite,
         appBar: isHomeScreen

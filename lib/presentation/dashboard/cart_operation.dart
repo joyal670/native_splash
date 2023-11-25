@@ -88,7 +88,7 @@ void getAllProducts() async {
   cartListener.value.clear();
   cartListener.value.addAll(table.values);
   cartListener.notifyListeners();
-  // print(table);
+  print(table);
 }
 
 deleteCartItem(int id) async {

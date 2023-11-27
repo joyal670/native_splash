@@ -78,58 +78,65 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: colorWhite,
-        appBar: AppBar(
-          backgroundColor: colorWhite,
-          elevation: 0,
-          leading: Builder(builder: (context) {
-            return InkWell(
-              onTap: () {
-                Scaffold.of(context).openDrawer();
-              },
-              child: Padding(
-                padding: const EdgeInsets.all(13),
-                child: Image.asset(
-                  'assets/images/menu.png',
-                ),
-              ),
-            );
-          }),
+        appBar: PreferredSize(
+          preferredSize: isShown ? Size.fromHeight(100) : Size.fromHeight(0),
+          child: AnimatedContainer(
+            duration: Duration(milliseconds: 300),
+            height: isShown ? 80 : 0,
+            child: AppBar(
+              backgroundColor: colorWhite,
+              elevation: 0,
+              leading: Builder(builder: (context) {
+                return InkWell(
+                  onTap: () {
+                    Scaffold.of(context).openDrawer();
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(13),
+                    child: Image.asset(
+                      'assets/images/menu.png',
+                    ),
+                  ),
+                );
+              }),
 
-          actions: [
-            InkWell(
-              onTap: () {
-                if (_currentIndex != 2) {
-                  setState(() => _currentIndex = 2);
-                }
-              },
-              child: Image.asset(
-                'assets/images/shopping_cart.png',
-                width: 25,
-                height: 25,
-              ),
-            ),
-            width15,
-            InkWell(
-              onTap: () {
-                Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (context) {
-                  return NotificationScreen();
-                }));
-              },
-              child: ShakeAnimatedWidget(
-                enabled: true,
-                duration: Duration(milliseconds: 1500),
-                shakeAngle: Rotation.deg(z: 40),
-                curve: Curves.linear,
-                child: Icon(
-                  Icons.notifications_active,
-                  color: colorRed,
+              actions: [
+                InkWell(
+                  onTap: () {
+                    if (_currentIndex != 2) {
+                      setState(() => _currentIndex = 2);
+                    }
+                  },
+                  child: Image.asset(
+                    'assets/images/shopping_cart.png',
+                    width: 25,
+                    height: 25,
+                  ),
                 ),
-              ),
+                width15,
+                InkWell(
+                  onTap: () {
+                    Navigator.of(context)
+                        .push(MaterialPageRoute(builder: (context) {
+                      return NotificationScreen();
+                    }));
+                  },
+                  child: ShakeAnimatedWidget(
+                    enabled: true,
+                    duration: Duration(milliseconds: 1500),
+                    shakeAngle: Rotation.deg(z: 40),
+                    curve: Curves.linear,
+                    child: Icon(
+                      Icons.notifications_active,
+                      color: colorRed,
+                    ),
+                  ),
+                ),
+                width20
+              ],
+              // leadingWidth: 35,
             ),
-            width20
-          ],
-          // leadingWidth: 35,
+          ),
         ),
         bottomNavigationBar: AnimatedContainer(
           duration: Duration(milliseconds: 300),

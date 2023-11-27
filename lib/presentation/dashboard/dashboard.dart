@@ -5,7 +5,9 @@ import 'package:alot/presentation/dashboard/bottom_nav/cart/cart.dart';
 import 'package:alot/presentation/notification/notification.dart';
 import 'package:alot/presentation/utils/colors.dart';
 import 'package:alot/presentation/utils/dims.dart';
+import 'package:animated_widgets/animated_widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../providers/LocaleProvider.dart';
@@ -33,6 +35,44 @@ class _DashboardScreenState extends State<DashboardScreen> {
     ),
     AccountScreen()
   ];
+  bool isShown = true;
+
+  /// Shows the child widget if it is currently hidden.
+  void show() {
+    if (!isShown) {
+      setState(() => isShown = true);
+    }
+  }
+
+  /// Hides the child widget if it is currently shown.
+  void hide() {
+    if (isShown) {
+      setState(
+        () => isShown = false,
+      );
+    }
+  }
+
+  void listen() {
+    final direction = scrollController.position.userScrollDirection;
+    if (direction == ScrollDirection.forward) {
+      show();
+    } else if (direction == ScrollDirection.reverse) {
+      hide();
+    }
+  }
+
+  @override
+  void initState() {
+    scrollController.addListener(listen);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    scrollController.removeListener(() {});
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,48 +116,57 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   return NotificationScreen();
                 }));
               },
-              child: Icon(
-                Icons.notifications_active,
-                color: colorRed,
-                size: 30,
+              child: ShakeAnimatedWidget(
+                enabled: true,
+                duration: Duration(milliseconds: 1500),
+                shakeAngle: Rotation.deg(z: 40),
+                curve: Curves.linear,
+                child: Icon(
+                  Icons.notifications_active,
+                  color: colorRed,
+                ),
               ),
             ),
             width20
           ],
           // leadingWidth: 35,
         ),
-        bottomNavigationBar: SalomonBottomBar(
-          currentIndex: _currentIndex,
-          onTap: (i) => setState(() => _currentIndex = i),
-          items: [
-            /// Home
-            SalomonBottomBarItem(
-              icon: Icon(Icons.home),
-              title: Text("Home"),
-              selectedColor: Colors.purple,
-            ),
+        bottomNavigationBar: AnimatedContainer(
+          duration: Duration(milliseconds: 300),
+          height: isShown ? 60 : 0,
+          child: SalomonBottomBar(
+            currentIndex: _currentIndex,
+            onTap: (i) => setState(() => _currentIndex = i),
+            items: [
+              /// Home
+              SalomonBottomBarItem(
+                icon: Icon(Icons.home),
+                title: Text("Home"),
+                selectedColor: Colors.purple,
+              ),
 
-            /// Likes
-            SalomonBottomBarItem(
-              icon: Icon(Icons.favorite_border),
-              title: Text("Orders"),
-              selectedColor: Colors.pink,
-            ),
+              /// Likes
+              SalomonBottomBarItem(
+                icon: Icon(Icons.favorite_border),
+                title: Text("Orders"),
+                selectedColor: Colors.pink,
+              ),
 
-            /// Search
-            SalomonBottomBarItem(
-              icon: Icon(Icons.shopping_bag),
-              title: Text("Cart"),
-              selectedColor: Colors.orange,
-            ),
+              /// Search
+              SalomonBottomBarItem(
+                icon: Icon(Icons.shopping_bag),
+                title: Text("Cart"),
+                selectedColor: Colors.orange,
+              ),
 
-            /// Profile
-            SalomonBottomBarItem(
-              icon: Icon(Icons.person),
-              title: Text("Profile"),
-              selectedColor: Colors.teal,
-            ),
-          ],
+              /// Profile
+              SalomonBottomBarItem(
+                icon: Icon(Icons.person),
+                title: Text("Profile"),
+                selectedColor: Colors.teal,
+              ),
+            ],
+          ),
         ),
         drawer: DrawerWidget(),
         body: _pages[_currentIndex]);

@@ -10,15 +10,16 @@ import '../../../utils/colors.dart';
 import '../../../utils/dims.dart';
 import '../../productview.dart';
 
+ScrollController scrollController = ScrollController();
+
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  HomeScreen({super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  ScrollController _scrollController = ScrollController();
   List<Product> productsList = [];
 
   @override
@@ -39,7 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       backgroundColor: colorWhite,
       body: GridView.count(
-        controller: _scrollController,
+        controller: scrollController,
         crossAxisCount: 2,
         mainAxisSpacing: 7,
         crossAxisSpacing: 7,

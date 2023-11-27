@@ -1,7 +1,7 @@
 import 'package:alot/domain/api.dart';
 import 'package:alot/presentation/notification/notification.dart';
 import 'package:flutter/material.dart';
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 /* --------------------------------------------------------------------------------------  */
 // state
@@ -67,7 +67,7 @@ class NotificationBloc
       model.add(NotificationModel(
           title: "Offer Code",
           desc:
-              "Alex can receive an offer code ‘ALEX20′ for a 20% discount on their first purchase.",
+              "Alex can receive an offer code 'ALEX20' for a 20% discount on their first purchase.",
           isRead: false));
       model.add(NotificationModel(
           title: "Hello",

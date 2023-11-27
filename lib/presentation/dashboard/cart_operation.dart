@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:alot/presentation/dashboard/cartmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
@@ -57,7 +55,7 @@ void addToCart(CartModel model) async {
   //   model.id = await table.add(model);
   // }
 
-  int existingItemId = model.id!;
+  //int existingItemId = model.id!;
   // for (final item in table.values) {
   //   if (item.id == model.id) {
   //     existingItemId = item.id as int;
@@ -88,7 +86,6 @@ void getAllProducts() async {
   cartListener.value.clear();
   cartListener.value.addAll(table.values);
   cartListener.notifyListeners();
-  print(table);
 }
 
 deleteCartItem(int id) async {

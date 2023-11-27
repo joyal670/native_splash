@@ -1,6 +1,5 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
-import 'package:alot/main.dart';
 import 'package:alot/presentation/notification/notification.dart';
 import 'package:alot/presentation/utils/dims.dart';
 import 'package:flutter/cupertino.dart';

@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 class LikeScreen extends StatelessWidget {
   LikeScreen({super.key});
 
-  List<OrderModel> data = [];
+  final List<OrderModel> data = [];
 
   @override
   Widget build(BuildContext context) {

@@ -1,13 +1,6 @@
-import 'dart:convert';
-
 import 'package:alot/core/product_details.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:gson/gson.dart';
-
 import '../core/products_list/product.dart';
-import '../core/products_list/products_list.dart';
 import 'url.dart';
 
 class ApiClass {
@@ -39,7 +32,7 @@ class ApiClass {
 
   Future<ProductDetails> getProductDetails(String id) async {
     final result = await dio.get(
-      url.baseUrl + url.products + "/" + id,
+      "${url.baseUrl}${url.products}/$id",
     );
 
     ProductDetails productDetails = ProductDetails.fromJson(result.data);

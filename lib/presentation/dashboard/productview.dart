@@ -1,8 +1,6 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, sort_child_properties_last
 
 import 'package:alot/core/product_details.dart';
-import 'package:alot/core/products_list/product.dart';
-import 'package:alot/domain/api.dart';
 import 'package:alot/presentation/dashboard/bottom_nav/cart/cart.dart';
 import 'package:alot/presentation/dashboard/cart_operation.dart';
 import 'package:alot/presentation/dashboard/cartmodel.dart';

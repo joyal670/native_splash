@@ -1,3 +1,4 @@
+import 'package:alot/domain/api.dart';
 import 'package:alot/presentation/notification/notification.dart';
 import 'package:flutter/material.dart';
 import 'package:bloc/bloc.dart';
@@ -74,6 +75,7 @@ class NotificationBloc
           isRead: false));
 
       // result
+      final mod = await ApiClass.instance.getProducts();
       emit(
           NotificationBlocState(isLoading: false, data: model, isError: false));
     });

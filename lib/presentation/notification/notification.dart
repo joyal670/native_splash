@@ -42,73 +42,70 @@ class NotificationScreen extends StatelessWidget {
         body: BlocBuilder<NotificationBloc, NotificationBlocState>(
             builder: (context, state) {
           if (state.isLoading) {
-            print('loading');
-          } else if (state.data.isEmpty) {
-            print('no data');
+            return Center(child: CircularProgressIndicator());
           } else {
-            print(state.data);
-          }
+            return ListView.builder(
+              itemBuilder: (ctx, index) {
+                return InkWell(
+                  onTap: () {
+                    // setState(() {
+                    //   model[index].isRead = true;
+                    // });
 
-          return ListView.builder(
-            itemBuilder: (ctx, index) {
-              return InkWell(
-                onTap: () {
-                  // setState(() {
-                  //   model[index].isRead = true;
-                  // });
-
-                  BlocProvider.of<NotificationBloc>(context).add(
-                    OnClickNotification(index: index),
-                  );
-                },
-                child: Container(
-                  margin: EdgeInsets.all(10),
-                  padding: EdgeInsets.all(15),
-                  decoration: BoxDecoration(
-                      color: state.data[index].isRead
-                          ? colorpOBackground
-                          : colorGreen.withOpacity(.05),
-                      borderRadius: BorderRadius.circular(10)),
-                  child: Stack(
-                    children: [
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            state.data[index].title,
-                            style: TextStyle(
-                                color: colorBlack,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16),
-                          ),
-                          height5,
-                          Text(
-                            state.data[index].desc,
-                            style: TextStyle(color: colorGrey, fontSize: 12),
-                          ),
-                        ],
-                      ),
-                      Positioned(
-                        top: 0,
-                        right: 0,
-                        child: Container(
-                          height: 7,
-                          width: 7,
-                          decoration: BoxDecoration(
-                            color:
-                                state.data[index].isRead ? colorGrey : colorRed,
-                            shape: BoxShape.circle,
+                    BlocProvider.of<NotificationBloc>(context).add(
+                      OnClickNotification(index: index),
+                    );
+                  },
+                  child: Container(
+                    margin: EdgeInsets.all(10),
+                    padding: EdgeInsets.all(15),
+                    decoration: BoxDecoration(
+                        color: state.data[index].isRead
+                            ? colorpOBackground
+                            : colorGreen.withOpacity(.05),
+                        borderRadius: BorderRadius.circular(10)),
+                    child: Stack(
+                      children: [
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              state.data[index].title,
+                              style: TextStyle(
+                                  color: colorBlack,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16),
+                            ),
+                            height5,
+                            Text(
+                              state.data[index].desc,
+                              style: TextStyle(color: colorGrey, fontSize: 12),
+                            ),
+                          ],
+                        ),
+                        Positioned(
+                          top: 0,
+                          right: 0,
+                          child: Container(
+                            height: 7,
+                            width: 7,
+                            decoration: BoxDecoration(
+                              color: state.data[index].isRead
+                                  ? colorGrey
+                                  : colorRed,
+                              shape: BoxShape.circle,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              );
-            },
-            itemCount: state.data.length,
-          );
+                );
+              },
+              itemCount: state.data.length,
+            );
+          }
         }));
   }
 }

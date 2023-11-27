@@ -154,7 +154,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
               /// Likes
               SalomonBottomBarItem(
-                icon: Icon(Icons.favorite_border),
+                icon: Icon(Icons.history),
                 title: Text("Orders"),
                 selectedColor: Colors.pink,
               ),

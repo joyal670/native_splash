@@ -1,6 +1,8 @@
 // ignore_for_file: prefer_const_constructors, use_build_context_synchronously, prefer_final_fields
 
+import 'package:alot/presentation/bloc/products_list.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 import '../../../../core/product_details.dart';
@@ -12,62 +14,57 @@ import '../../productview.dart';
 
 ScrollController scrollController = ScrollController();
 
-class HomeScreen extends StatefulWidget {
-  HomeScreen({super.key});
-
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  List<Product> productsList = [];
-
-  @override
-  void initState() {
-    callApi();
-    super.initState();
-  }
-
-  void callApi() async {
-    final result = await ApiClass.instance.getProducts();
-    setState(() {
-      productsList.addAll(result);
-    });
-  }
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: colorWhite,
-      body: GridView.count(
-        controller: scrollController,
-        crossAxisCount: 2,
-        mainAxisSpacing: 7,
-        crossAxisSpacing: 7,
-        shrinkWrap: true,
-        childAspectRatio: 1,
-        children: List.generate(productsList.length, (index) {
-          return GestureDetector(
-              onTap: () {
-                // pushNewScreen(
-                //   context,
-                //   screen: ViewImageScreen(
-                //     photoId: model[index].id,
-                //   ),
-                //   withNavBar: false, // OPTIONAL VALUE. True by default.
-                //   pageTransitionAnimation: PageTransitionAnimation.cupertino,
-                // );
-              },
-              child: Padding(
-                padding:
-                    const EdgeInsets.only(left: 2, right: 2, top: 5, bottom: 5),
-                child: ProductGrid(
-                  product: productsList[index],
-                ),
-              ));
-        }),
-      ),
+    BlocProvider.of<ProductsListBloc>(context).add(
+      GetProductsList(),
     );
+    return Scaffold(
+        backgroundColor: colorWhite,
+        body: BlocBuilder<ProductsListBloc, ProductsListBlocState>(
+            builder: (context, state) {
+          if (state.isLoading) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (state.isError) {
+            return Center(
+              child: Text('Error'),
+            );
+          } else {
+            return GridView.count(
+              controller: scrollController,
+              crossAxisCount: 2,
+              mainAxisSpacing: 7,
+              crossAxisSpacing: 7,
+              shrinkWrap: true,
+              childAspectRatio: 1,
+              children: List.generate(state.data.length, (index) {
+                return GestureDetector(
+                    onTap: () {
+                      // pushNewScreen(
+                      //   context,
+                      //   screen: ViewImageScreen(
+                      //     photoId: model[index].id,
+                      //   ),
+                      //   withNavBar: false, // OPTIONAL VALUE. True by default.
+                      //   pageTransitionAnimation: PageTransitionAnimation.cupertino,
+                      // );
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                          left: 2, right: 2, top: 5, bottom: 5),
+                      child: ProductGrid(
+                        product: state.data[index],
+                      ),
+                    ));
+              }),
+            );
+          }
+        }));
   }
 }
 

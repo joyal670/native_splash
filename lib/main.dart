@@ -1,4 +1,5 @@
 import 'package:alot/presentation/bloc/notification_bloc.dart';
+import 'package:alot/presentation/bloc/products_list.dart';
 import 'package:alot/presentation/dashboard/cartmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -28,7 +29,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (BuildContext context) => NotificationBloc())
+        BlocProvider(create: (BuildContext context) => NotificationBloc()),
+        BlocProvider(create: (BuildContext context) => ProductsListBloc())
       ],
       child: ChangeNotifierProvider(
         create: (context) => LocaleProvider(),

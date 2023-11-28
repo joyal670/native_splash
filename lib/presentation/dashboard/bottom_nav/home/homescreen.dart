@@ -81,7 +81,21 @@ class HomeScreen extends StatelessWidget {
                                   style: ButtonStyle(
                                       backgroundColor:
                                           MaterialStatePropertyAll(colorBlack)),
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    if (index == 0) {
+                                      BlocProvider.of<ProductsListBloc>(context)
+                                          .add(
+                                        SearchItem(title: ''),
+                                      );
+                                    } else {
+                                      BlocProvider.of<ProductsListBloc>(context)
+                                          .add(
+                                        OnClickCategoryItem(
+                                            name: state
+                                                .categoryData[index].items),
+                                      );
+                                    }
+                                  },
                                   child: Text(
                                     state.categoryData[index].items,
                                     style: TextStyle(color: colorWhite),

@@ -66,6 +66,7 @@ class Repository {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         List<Category> data = [];
+        data.add(Category(items: "All"));
         response.data.forEach(
           (element) {
             data.add(Category.fromJson(element));
@@ -78,6 +79,26 @@ class Repository {
 
         // print(data);
         return Right(data);
+      } else {
+        return Left(MainFailure.serverFailure());
+      }
+    } catch (e) {
+      return Left(MainFailure.clientFailure());
+    }
+  }
+
+  Future<Either<MainFailure, List<Product>>> categoryProduct(
+      String query) async {
+    try {
+      final response = await dio.get(
+        url.baseUrl + url.category + "/$query",
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        List<Product> products = List.from(response.data['products']
+            .map((productJson) => Product.fromJson(productJson)));
+
+        return Right(products);
       } else {
         return Left(MainFailure.serverFailure());
       }

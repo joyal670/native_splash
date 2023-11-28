@@ -14,23 +14,18 @@ class ProductsListBlocState {
   bool isLoading;
   List<Product> data;
   bool isError;
-  final List<Product> filteredData; // Filtered data
+
   List<Category> categoryData; // Filtered data
 
   ProductsListBlocState({
     required this.isLoading,
     required this.data,
     required this.isError,
-    required this.filteredData,
     required this.categoryData,
   });
 
   factory ProductsListBlocState.initial() => ProductsListBlocState(
-      data: [],
-      isError: false,
-      isLoading: true,
-      filteredData: [],
-      categoryData: []);
+      data: [], isError: false, isLoading: true, categoryData: []);
 }
 
 /* --------------------------------------------------------------------------------------  */
@@ -40,12 +35,6 @@ abstract class ProductsListBlocEvent {}
 
 class GetProductsList extends ProductsListBlocEvent {}
 
-class OnClickItem extends ProductsListBlocEvent {
-  final int index;
-
-  OnClickItem({required this.index});
-}
-
 class SearchItem extends ProductsListBlocEvent {
   final String title;
 
@@ -53,6 +42,12 @@ class SearchItem extends ProductsListBlocEvent {
 }
 
 class GetCategoryList extends ProductsListBlocEvent {}
+
+class OnClickCategoryItem extends ProductsListBlocEvent {
+  final String name;
+
+  OnClickCategoryItem({required this.name});
+}
 
 /* --------------------------------------------------------------------------------------  */
 // bloc
@@ -62,11 +57,7 @@ class ProductsListBloc
     on<GetProductsList>((event, emit) async {
       // loading
       emit(ProductsListBlocState(
-          isLoading: true,
-          data: [],
-          isError: false,
-          filteredData: [],
-          categoryData: []));
+          isLoading: true, data: [], isError: false, categoryData: []));
 
       // api call
       final productsListFuture = Repository.instance.getProductsList();
@@ -84,7 +75,6 @@ class ProductsListBloc
         isLoading: false,
         data: productsRepo.fold((_) => [], (success) => success),
         isError: productsRepo.isLeft(),
-        filteredData: productsRepo.fold((_) => [], (success) => success),
         categoryData: categoriesRepo.fold((_) => [], (success) => success),
       ));
 
@@ -111,19 +101,14 @@ class ProductsListBloc
 
       // api call
       final dRepo = await Repository.instance.searchProduct(event.title);
-      print(state.categoryData);
+
       emit(dRepo.fold(
           (failure) => ProductsListBlocState(
-              isLoading: false,
-              data: [],
-              isError: true,
-              filteredData: [],
-              categoryData: []),
+              isLoading: false, data: [], isError: true, categoryData: []),
           (success) => ProductsListBlocState(
               isLoading: false,
               data: success,
               isError: false,
-              filteredData: success,
               categoryData: state.categoryData)));
 
       // emit(ProductsListBlocState(
@@ -151,5 +136,30 @@ class ProductsListBloc
     //           filteredData: state.filteredData,
     //           categoryData: success)));
     // });
+
+    on<OnClickCategoryItem>((event, emit) async {
+      // var filteredCartList = state.data
+      //     .where((cartItem) =>
+      //         cartItem.title!.toLowerCase().contains(event.title.toLowerCase()))
+      //     .toList();
+
+      // api call
+      final dRepo = await Repository.instance.categoryProduct(event.name);
+
+      emit(dRepo.fold(
+          (failure) => ProductsListBlocState(
+              isLoading: false, data: [], isError: true, categoryData: []),
+          (success) => ProductsListBlocState(
+              isLoading: false,
+              data: success,
+              isError: false,
+              categoryData: state.categoryData)));
+
+      // emit(ProductsListBlocState(
+      //     isLoading: false,
+      //     data: state.data,
+      //     isError: false,
+      //     filteredData: filteredCartList));
+    });
   }
 }

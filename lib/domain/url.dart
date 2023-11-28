@@ -4,4 +4,5 @@ class URL {
   String products = 'products';
   String productSearch = 'products/search';
   String categories = 'products/categories';
+  String category = 'products/category';
 }

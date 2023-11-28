@@ -7,6 +7,7 @@ import 'package:alot/presentation/dashboard/cartmodel.dart';
 import 'package:alot/presentation/utils/colors.dart';
 import 'package:alot/presentation/utils/dims.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:easy_image_viewer/easy_image_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
@@ -145,27 +146,42 @@ class _ProductViewState extends State<ProductView> {
                 height20,
                 Stack(
                   children: [
-                    CarouselSlider.builder(
-                      carouselController: _controller,
-                      itemCount: widget.product.images!.length,
-                      options: CarouselOptions(
-                          height: 200.0,
-                          autoPlay: true,
-                          enableInfiniteScroll: false,
-                          onPageChanged: (index, reas) {
-                            setState(() {
-                              _current = index;
-                            });
-                          }),
-                      itemBuilder: (BuildContext context, int itemIndex,
-                              int pageViewIndex) =>
-                          Container(
-                        width: MediaQuery.of(context).size.width,
-                        margin: EdgeInsets.symmetric(horizontal: 5.0),
-                        decoration: BoxDecoration(color: Colors.amber),
-                        child: Image.network(
-                          widget.product.images![itemIndex].toString(),
-                          fit: BoxFit.fill,
+                    InkWell(
+                      onTap: () {
+                        MultiImageProvider multiImageProvider =
+                            MultiImageProvider(widget.product.images!
+                                .map((url) => NetworkImage(url))
+                                .toList());
+
+                        showImageViewerPager(context, multiImageProvider,
+                            onPageChanged: (page) {
+                          print("page changed to $page");
+                        }, onViewerDismissed: (page) {
+                          print("dismissed while on page $page");
+                        });
+                      },
+                      child: CarouselSlider.builder(
+                        carouselController: _controller,
+                        itemCount: widget.product.images!.length,
+                        options: CarouselOptions(
+                            height: 200.0,
+                            autoPlay: true,
+                            enableInfiniteScroll: false,
+                            onPageChanged: (index, reas) {
+                              setState(() {
+                                _current = index;
+                              });
+                            }),
+                        itemBuilder: (BuildContext context, int itemIndex,
+                                int pageViewIndex) =>
+                            Container(
+                          width: MediaQuery.of(context).size.width,
+                          margin: EdgeInsets.symmetric(horizontal: 5.0),
+                          decoration: BoxDecoration(color: Colors.amber),
+                          child: Image.network(
+                            widget.product.images![itemIndex].toString(),
+                            fit: BoxFit.fill,
+                          ),
                         ),
                       ),
                     ),

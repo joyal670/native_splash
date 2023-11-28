@@ -51,6 +51,7 @@ dependencies:
   animated_widgets: ^1.1.0
   dartz: ^0.10.1
   shimmer: ^3.0.0
+  easy_image_viewer: ^1.2.1
  
 
 dev_dependencies:

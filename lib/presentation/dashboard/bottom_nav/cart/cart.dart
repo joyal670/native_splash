@@ -1,10 +1,14 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:alot/core/product_details.dart';
+import 'package:alot/presentation/dashboard/productview.dart';
 import 'package:alot/presentation/utils/colors.dart';
 import 'package:alot/presentation/utils/dims.dart';
+import 'package:alot/presentation/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../domain/api.dart';
 import '../../cart_operation.dart';
 import '../../cartmodel.dart';
 
@@ -104,11 +108,23 @@ class _CartScreenState extends State<CartScreen> {
                   builder: (context, value, child) {
                     return ListView.builder(
                         itemCount: _filteredCartList.length,
-                        itemBuilder: (context, index) {
+                        itemBuilder: (cxt, index) {
                           final data = _filteredCartList[index];
                           return InkWell(
-                            onTap: () {
-                              deleteCartItem(data.productDetails.id!);
+                            onTap: () async {
+                              if (isRedundantClick(DateTime.now())) {
+                                print('hold on, processing');
+                                return;
+                              }
+                              print('run process');
+                              ProductDetails result = await ApiClass.instance
+                                  .getProductDetails(data.id.toString());
+                              Navigator.of(cxt)
+                                  .push(MaterialPageRoute(builder: (context) {
+                                return ProductView(
+                                  product: result,
+                                );
+                              }));
                             },
                             child: Container(
                               //  padding: EdgeInsets.all(10),

@@ -54,6 +54,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   void listen() {
+    FocusManager.instance.primaryFocus?.unfocus();
     final direction = scrollController.position.userScrollDirection;
     if (direction == ScrollDirection.forward) {
       show();
@@ -82,7 +83,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           preferredSize: isShown ? Size.fromHeight(100) : Size.fromHeight(0),
           child: AnimatedContainer(
             duration: Duration(milliseconds: 300),
-            height: isShown ? 80 : 0,
+            height: isShown ? 80 : 50,
             child: AppBar(
               backgroundColor: colorWhite,
               elevation: 0,

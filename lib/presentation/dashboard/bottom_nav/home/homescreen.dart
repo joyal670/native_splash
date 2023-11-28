@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, use_build_context_synchronously, prefer_final_fields
 
 import 'package:alot/presentation/bloc/products_list.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -11,6 +12,7 @@ import '../../../../domain/api.dart';
 import '../../../utils/colors.dart';
 import '../../../utils/dims.dart';
 import '../../productview.dart';
+import 'package:shimmer/shimmer.dart';
 
 ScrollController scrollController = ScrollController();
 
@@ -24,47 +26,95 @@ class HomeScreen extends StatelessWidget {
     );
     return Scaffold(
         backgroundColor: colorWhite,
-        body: BlocBuilder<ProductsListBloc, ProductsListBlocState>(
-            builder: (context, state) {
-          if (state.isLoading) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          } else if (state.isError) {
-            return Center(
-              child: Text('Error'),
-            );
-          } else {
-            return GridView.count(
-              controller: scrollController,
-              crossAxisCount: 2,
-              mainAxisSpacing: 7,
-              crossAxisSpacing: 7,
-              shrinkWrap: true,
-              childAspectRatio: 1,
-              children: List.generate(state.data.length, (index) {
-                return GestureDetector(
-                    onTap: () {
-                      // pushNewScreen(
-                      //   context,
-                      //   screen: ViewImageScreen(
-                      //     photoId: model[index].id,
-                      //   ),
-                      //   withNavBar: false, // OPTIONAL VALUE. True by default.
-                      //   pageTransitionAnimation: PageTransitionAnimation.cupertino,
-                      // );
-                    },
-                    child: Padding(
+        body: SafeArea(child:
+            BlocBuilder<ProductsListBloc, ProductsListBlocState>(
+                builder: (context, state) {
+          return Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: CupertinoSearchTextField(
+                  // controller: _searchController,
+                  onChanged: (value) {
+                    BlocProvider.of<ProductsListBloc>(context).add(
+                      SearchItem(title: value),
+                    );
+                  },
+                ),
+              ),
+              if (state.isLoading)
+                SizedBox(
+                    height: 50,
+                    child: ListView.builder(
+                        itemCount: 10,
+                        shrinkWrap: true,
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (BuildContext ctx, index) {
+                          return Shimmer.fromColors(
+                            baseColor: Color(0xfffbf9f6),
+                            highlightColor: Color(0xffc0c0c0),
+                            child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: TextButton(
+                                    style: ButtonStyle(
+                                        backgroundColor:
+                                            MaterialStatePropertyAll(
+                                                colorBlack)),
+                                    onPressed: () {},
+                                    child: Text(
+                                      '',
+                                      style: TextStyle(color: colorWhite),
+                                    ))),
+                          );
+                        }))
+              else
+                SizedBox(
+                    height: 50,
+                    child: ListView.builder(
+                        itemCount: state.categoryData.length,
+                        shrinkWrap: true,
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (BuildContext ctx, index) {
+                          return Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: TextButton(
+                                  style: ButtonStyle(
+                                      backgroundColor:
+                                          MaterialStatePropertyAll(colorBlack)),
+                                  onPressed: () {},
+                                  child: Text(
+                                    state.categoryData[index].items,
+                                    style: TextStyle(color: colorWhite),
+                                  )));
+                        })),
+              if (state.isLoading)
+                Expanded(
+                  child: Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                )
+              else
+                Expanded(
+                    child: GridView.count(
+                  controller: scrollController,
+                  crossAxisCount: 2,
+                  mainAxisSpacing: 7,
+                  crossAxisSpacing: 7,
+                  shrinkWrap: true,
+                  childAspectRatio: 1,
+                  children: List.generate(state.data.length, (index) {
+                    return Padding(
                       padding: const EdgeInsets.only(
                           left: 2, right: 2, top: 5, bottom: 5),
                       child: ProductGrid(
                         product: state.data[index],
                       ),
-                    ));
-              }),
-            );
-          }
-        }));
+                    );
+                  }),
+                )),
+            ],
+          );
+        })));
   }
 }
 

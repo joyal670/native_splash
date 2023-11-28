@@ -1,4 +1,5 @@
 import 'package:alot/core/categories.dart';
+import 'package:alot/core/login_response.dart';
 import 'package:alot/domain/url.dart';
 import 'package:dio/dio.dart';
 
@@ -91,7 +92,7 @@ class Repository {
       String query) async {
     try {
       final response = await dio.get(
-        url.baseUrl + url.category + "/$query",
+        "${url.baseUrl}${url.category}/$query",
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
@@ -105,6 +106,36 @@ class Repository {
     } catch (e) {
       print(e);
       return Left(MainFailure.clientFailure());
+    }
+  }
+
+  Future<Either<MainFailure, LoginResponse>> login(
+      String username, String password) async {
+    final formData = FormData.fromMap({
+      'username': username,
+      'password': password,
+    });
+
+    try {
+      final response = await dio.post(url.baseUrl + url.login, data: formData);
+      print(response);
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return Right(LoginResponse.fromJson(response.data));
+      } else {
+        return Left(MainFailure.serverFailure());
+      }
+    } catch (e) {
+      if (e is DioException) {
+        if (e.response != null) {
+          final response = LoginResponse.fromJson(e.response!.data);
+          return Left(MainFailure.clientFailure(response.message.toString()));
+        } else {
+          return Left(MainFailure.clientFailure());
+        }
+      } else {
+        return Left(MainFailure.clientFailure());
+      }
     }
   }
 }

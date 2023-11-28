@@ -5,4 +5,5 @@ class URL {
   String productSearch = 'products/search';
   String categories = 'products/categories';
   String category = 'products/category';
+  String login = 'auth/login';
 }

@@ -67,9 +67,11 @@ class _ProductViewState extends State<ProductView> {
                       print(model.id);
                       if (existingItemIndex == -1) {
                         addToCart(model);
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text("added to cart"),
-                        ));
+                        ScaffoldMessenger.of(context)
+                          ..removeCurrentSnackBar()
+                          ..showSnackBar(SnackBar(
+                            content: Text("added to cart"),
+                          ));
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                           content: Text(

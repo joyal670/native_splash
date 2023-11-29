@@ -5,6 +5,7 @@ import 'package:alot/presentation/utils/dims.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../../../order/address.dart';
 import '../../../utils/colors.dart';
 
 class AccountScreen extends StatelessWidget {
@@ -167,7 +168,12 @@ class AccountScreen extends StatelessWidget {
               ),
             ),
             InkWell(
-              onTap: () {},
+              onTap: () {
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (context) {
+                  return AddressListing();
+                }));
+              },
               child: ListTile(
                 leading: Icon(
                   Icons.pin_drop,

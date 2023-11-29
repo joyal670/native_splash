@@ -54,12 +54,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   void listen() {
-    FocusManager.instance.primaryFocus?.unfocus();
-    final direction = scrollController.position.userScrollDirection;
-    if (direction == ScrollDirection.forward) {
-      show();
-    } else if (direction == ScrollDirection.reverse) {
-      hide();
+    if (mounted) {
+      FocusManager.instance.primaryFocus?.unfocus();
+      final direction = scrollController.position.userScrollDirection;
+      if (direction == ScrollDirection.forward) {
+        show();
+      } else if (direction == ScrollDirection.reverse) {
+        hide();
+      }
     }
   }
 
@@ -71,7 +73,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   void dispose() {
-    scrollController.removeListener(() {});
+    scrollController.removeListener(listen);
+    scrollController.dispose();
     super.dispose();
   }
 

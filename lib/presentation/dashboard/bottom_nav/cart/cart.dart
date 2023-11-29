@@ -2,6 +2,7 @@
 
 import 'package:alot/core/product_details.dart';
 import 'package:alot/presentation/dashboard/productview.dart';
+import 'package:alot/presentation/order/order_summary.dart';
 import 'package:alot/presentation/utils/colors.dart';
 import 'package:alot/presentation/utils/dims.dart';
 import 'package:alot/presentation/utils/utils.dart';
@@ -85,7 +86,12 @@ class _CartScreenState extends State<CartScreen> {
                 child: ElevatedButton(
                     style: ButtonStyle(
                         backgroundColor: MaterialStatePropertyAll(colorBlack)),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (context) {
+                        return OrderSummary();
+                      }));
+                    },
                     child: Text('Proceed to checkout')),
               ),
             ),

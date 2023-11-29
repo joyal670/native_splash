@@ -52,6 +52,7 @@ dependencies:
   dartz: ^0.10.1
   shimmer: ^3.0.0
   easy_image_viewer: ^1.2.1
+  dropdown_textfield: ^1.0.8
  
 
 dev_dependencies:

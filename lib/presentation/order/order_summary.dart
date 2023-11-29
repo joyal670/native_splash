@@ -7,6 +7,7 @@ import 'package:alot/presentation/utils/colors.dart';
 import 'package:alot/presentation/utils/dims.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:date_picker_timeline/date_picker_timeline.dart';
 
 class OrderSummary extends StatefulWidget {
   const OrderSummary({super.key});
@@ -128,28 +129,29 @@ class _OrderSummaryState extends State<OrderSummary> {
                       'Delivery service, Delivery by',
                       style: TextStyle(fontSize: 12, color: colorGrey),
                     ),
-                    TextButton(
-                        onPressed: () async {
-                          final picked = await showDatePicker(
-                              context: context,
-                              firstDate: DateTime.now(),
-                              currentDate: DateTime.now(),
-                              initialDate: DateTime.now(),
-                              lastDate:
-                                  DateTime.now().add(Duration(days: 365)));
+                    // TextButton(
+                    //     onPressed: () async {
+                    //       // final picked = await showDatePicker(
+                    //       //     context: context,
+                    //       //     firstDate: DateTime.now(),
+                    //       //     currentDate: DateTime.now(),
+                    //       //     initialDate: DateTime.now(),
+                    //       //     lastDate:
+                    //       //         DateTime.now().add(Duration(days: 365)));
 
-                          if (picked != null && picked != selectedDate) {
-                            setState(() {
-                              selectedDate = picked;
-                            });
-                          }
+                    //       // if (picked != null && picked != selectedDate) {
+                    //       //   setState(() {
+                    //       //     selectedDate = picked;
+                    //       //   });
+                    //       // }
 
-                          // print(
-                          //     'Fedex Express, ${DateFormat('yyyy-MM-dd').format(selectedDate!)}');
-                        },
-                        child: Text('Change')),
+                    //       // print(
+                    //       //     'Fedex Express, ${DateFormat('yyyy-MM-dd').format(selectedDate!)}');
+                    //     },
+                    //     child: Text('Change')),
                   ],
                 ),
+                height5,
                 selectedDate == null
                     ? Text(
                         'Fedex Express, Friday 28 July',
@@ -167,6 +169,24 @@ class _OrderSummaryState extends State<OrderSummary> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
+                height10,
+                DatePicker(
+                  DateTime.now(),
+                  initialSelectedDate: DateTime.now(),
+                  selectionColor: Colors.black,
+                  selectedTextColor: Colors.white,
+                  inactiveDates: [
+                    DateTime.now().add(Duration(days: 2)),
+                    DateTime.now().add(Duration(days: 3))
+                  ],
+                  deactivatedColor: colorGrey,
+                  onDateChange: (date) {
+                    // New date selected
+                    setState(() {
+                      selectedDate = date;
+                    });
+                  },
+                ),
                 height30,
                 Summary(),
                 height30,

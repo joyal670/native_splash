@@ -1,6 +1,8 @@
+import 'package:alot/firebase_options.dart';
 import 'package:alot/presentation/bloc/notification_bloc.dart';
 import 'package:alot/presentation/bloc/products_list.dart';
 import 'package:alot/presentation/dashboard/cartmodel.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hive_flutter/adapters.dart';
@@ -14,6 +16,9 @@ import 'providers/LocaleProvider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   await Hive.initFlutter();
   if (!Hive.isAdapterRegistered(CartModelAdapter().typeId)) {
     Hive.registerAdapter(CartModelAdapter());

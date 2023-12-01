@@ -5,9 +5,12 @@ import 'package:alot/presentation/auth/resister/register.dart';
 import 'package:alot/presentation/utils/Responsive%20.dart';
 import 'package:alot/presentation/utils/colors.dart';
 import 'package:alot/presentation/utils/dims.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import '../../dashboard/dashboard.dart';
 import '../../utils/common_widgets.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -365,7 +368,11 @@ class mobileWidget extends StatelessWidget {
                 width: double.infinity,
                 height: 40,
                 child: ElevatedButton.icon(
-                  onPressed: () {},
+                  onPressed: () async {
+                    await FirebaseAuth.instance.signOut();
+                    final data = await signInWithGoogle();
+                    print(data);
+                  },
                   icon: Image.asset(
                     'assets/images/google.png',
                     width: 20,
@@ -382,7 +389,9 @@ class mobileWidget extends StatelessWidget {
                 width: double.infinity,
                 height: 40,
                 child: ElevatedButton.icon(
-                  onPressed: () {},
+                  onPressed: () async {
+                    await signInWithFacebook();
+                  },
                   icon: Image.asset(
                     'assets/images/facebook.png',
                     width: 20,
@@ -425,5 +434,46 @@ class mobileWidget extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<UserCredential> signInWithGoogle() async {
+    // Trigger the authentication flow
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+    if (googleUser == null) {
+      // Handle the case where the user canceled the Google Sign-In process.
+      return Future.error('Google Sign-In was canceled.');
+    }
+
+    // Obtain the auth details from the request
+    final GoogleSignInAuthentication googleAuth =
+        await googleUser.authentication;
+
+    // Check if at least one of ID token and access token is present
+    if (googleAuth?.accessToken == null && googleAuth?.idToken == null) {
+      // Handle the case where both tokens are null.
+      return Future.error('Both access token and ID token are null.');
+    }
+
+    // Create a new credential
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth?.accessToken,
+      idToken: googleAuth?.idToken,
+    );
+
+    // Once signed in, return the UserCredential
+    return await FirebaseAuth.instance.signInWithCredential(credential);
+  }
+
+  Future<UserCredential> signInWithFacebook() async {
+    // Trigger the sign-in flow
+    final LoginResult loginResult = await FacebookAuth.instance.login();
+
+    // Create a credential from the access token
+    final OAuthCredential facebookAuthCredential =
+        FacebookAuthProvider.credential(loginResult.accessToken!.token);
+
+    // Once signed in, return the UserCredential
+    return FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
   }
 }

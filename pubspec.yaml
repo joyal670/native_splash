@@ -54,6 +54,10 @@ dependencies:
   easy_image_viewer: ^1.2.1
   dropdown_textfield: ^1.0.8
   date_picker_timeline: ^1.2.5
+  firebase_auth: ^4.15.0
+  google_sign_in: ^6.1.6
+  firebase_core: ^2.24.0
+  flutter_facebook_auth: ^6.0.3
  
 
 dev_dependencies:

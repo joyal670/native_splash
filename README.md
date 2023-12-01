@@ -4,7 +4,7 @@ A new Flutter project.
 
 ## Getting Started
 
-code for generating packages : # flutter gen-l10n
+code for generating packages : #flutter gen-l10n
 
 
 This project is a starting point for a Flutter application.

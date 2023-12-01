@@ -438,7 +438,10 @@ class mobileWidget extends StatelessWidget {
 
   Future<UserCredential> signInWithGoogle() async {
     // Trigger the authentication flow
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    final GoogleSignInAccount? googleUser = await GoogleSignIn(
+            clientId:
+                '190564077554-c0cbmackem3i441ss2c8vuk8gv5ofcat.apps.googleusercontent.com')
+        .signIn();
 
     if (googleUser == null) {
       // Handle the case where the user canceled the Google Sign-In process.

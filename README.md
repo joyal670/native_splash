@@ -5,8 +5,9 @@ A new Flutter project.
 ## Getting Started
 
 code for generating packages : 
-  localization : flutter gen-l10n
-  splash : dart run flutter_native_splash:create
+
+localization : flutter gen-l10n
+splash : dart run flutter_native_splash:create
 
 
 This project is a starting point for a Flutter application.
